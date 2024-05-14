@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// schema.prisma
+
+model User {
+  id               Bytes      @id @default(auto()) @map("_id") @db.ObjectId
+  email            String     @unique
+  name             String
+  profilePicture   String     @default("")
+  about            String     @default("")
+  sentMessages     Messages[] @relation("sentMessages")
+  receivedMessages Messages[] @relation("receivedMessages")
+  createdAt        DateTime   @default(now())
+
+  Messages Messages[]
+}
+
+model Messages {
+  id            Bytes    @id @default(auto()) @map("_id") @db.ObjectId
+  sender        User     @relation("sentMessages", fields: [senderId], references: [id])
+  senderId      Bytes
+  receiver      User     @relation("receivedMessages", fields: [receiverId], references: [id])
+  receiverId    Bytes
+  type          String   @default("text")
+  message       String
+  messageStatus String   @default("sent")
+  createdAt     DateTime @default(now())
+  User          User?    @relation(fields: [userId], references: [id])
+  userId        Bytes?   @db.ObjectId
+}
