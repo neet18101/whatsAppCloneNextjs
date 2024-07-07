@@ -1,7 +1,7 @@
 import { setAllContacts } from "@/context/UserSlice";
 import { GET_ALL_CONTACTS } from "@/utils/ApiRoutes";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { BiArrowBack, BiSearchAlt2 } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
 import ChatLIstItem from "./ChatLIstItem";
@@ -58,13 +58,15 @@ function ContactsList() {
           return (
             <div key={Date.now() + initalLetter}>
               <div className="text-teal-light pl-10 py-5">{initalLetter}</div>
-              {userList.map((contact) => {
+              {userList.map((contact, index) => {
                 return (
-                  <ChatLIstItem
-                    data={contact}
-                    isContactPage={true}
-                    key={contact._id}
-                  />
+                  <Fragment key={index}>
+                    <ChatLIstItem
+                      data={contact}
+                      isContactPage={true}
+                      key={contact._id}
+                    />
+                  </Fragment>
                 );
               })}
             </div>
