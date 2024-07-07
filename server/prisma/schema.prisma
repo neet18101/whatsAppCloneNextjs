@@ -13,28 +13,24 @@ generator client {
 // schema.prisma
 
 model User {
-  id               Bytes      @id @default(auto()) @map("_id") @db.ObjectId
-  email            String     @unique
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  email            String    @unique
   name             String
-  profilePicture   String     @default("")
-  about            String     @default("")
-  sentMessages     Messages[] @relation("sentMessages")
-  receivedMessages Messages[] @relation("receivedMessages")
-  createdAt        DateTime   @default(now())
-
-  Messages Messages[]
+  profilePicture   String    @default("")
+  about            String    @default("")
+  sentMessages     Message[] @relation("sentMessages")
+  receivedMessages Message[] @relation("receivedMessages")
+  createdAt        DateTime  @default(now())
 }
 
-model Messages {
-  id            Bytes    @id @default(auto()) @map("_id") @db.ObjectId
+model Message {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   sender        User     @relation("sentMessages", fields: [senderId], references: [id])
-  senderId      Bytes
+  senderId      String   @db.ObjectId
   receiver      User     @relation("receivedMessages", fields: [receiverId], references: [id])
-  receiverId    Bytes
+  receiverId    String   @db.ObjectId
   type          String   @default("text")
   message       String
   messageStatus String   @default("sent")
   createdAt     DateTime @default(now())
-  User          User?    @relation(fields: [userId], references: [id])
-  userId        Bytes?   @db.ObjectId
 }

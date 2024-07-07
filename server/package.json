@@ -4,10 +4,10 @@
     "start": "nodemon index.js",
     "generate": "prisma generate",
     "migrate": "prisma db push --preview-feature"
-
   },
   "dependencies": {
-    "@prisma/client": "^4.14.0",
+    "@prisma/client": "^5.14.0",
+    "bson": "^6.7.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.3",

@@ -1,4 +1,5 @@
-import { User } from "../Model/Schema";
+
+import getPrismaInstance from "../utils/PrismaClient.js";
 
 export const checkedUser = async (req, res, next) => {
   try {
@@ -6,13 +7,15 @@ export const checkedUser = async (req, res, next) => {
     if (!email) {
       return res.json({ msg: "Email not found", status: false });
     }
-    // const prisma = getPrismaIntance();
-    // const user = await prisma.user.findUnique({ where: { email } });
-    const user = await User.findOne({ email });
+    const prisma = getPrismaInstance();
+    const user = await prisma.user.findUnique({ where: { email } });
+    // const user = await User.findOne({ email });
+ 
     console.log(user);
     if (!user) {
       return res.json({ msg: "User No Found", status: false });
     } else {
+      user.id = user.id.toString("hex");
       return res.json({ msg: "User Found", status: true, data: user });
     }
   } catch (error) {
@@ -28,7 +31,7 @@ export const onBoardUser = async (req, res, next) => {
       );
     }
 
-    const prisma = getPrismaIntance();
+    const prisma = getPrismaInstance();
 
     // Check if the username already exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -49,7 +52,7 @@ export const onBoardUser = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   try {
-    const prisma = getPrismaIntance();
+    const prisma = getPrismaInstance();
     const users = await prisma.user.findMany({
       orderBy: { name: "asc" },
       select: {
